@@ -1,3 +1,40 @@
+codon_table = {
+        'A': ['GCT', 'GCC', 'GCA', 'GCG'],
+        'C': ['TGT', 'TGC'],
+        'D': ['GAT', 'GAC'],
+        'E': ['GAA', 'GAG'],
+        'F': ['TTT', 'TTC'],
+        'G': ['GGT', 'GGC', 'GGA', 'GGG'],
+        'H': ['CAT', 'CAC'],
+        'I': ['ATT', 'ATC', 'ATA'],
+        'K': ['AAA', 'AAG'],
+        'L': ['TTA', 'TTG', 'CTT', 'CTC', 'CTA', 'CTG'],
+        'M': ['ATG'],
+        'N': ['AAT', 'AAC'],
+        'P': ['CCT', 'CCC', 'CCA', 'CCG'],
+        'Q': ['CAA', 'CAG'],
+        'R': ['CGT', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG'],
+        'S': ['TCT', 'TCC', 'TCA', 'TCG', 'AGT', 'AGC'],
+        'T': ['ACT', 'ACC', 'ACA', 'ACG'],
+        'V': ['GTT', 'GTC', 'GTA', 'GTG'],
+        'W': ['TGG'],
+        'Y': ['TAT', 'TAC']}
+
+
+
+def compute_length(*seqs: str):
+    """
+    Compute the length of the input amino acid sequence
+    
+    """
+    lens = []
+    for seq in seqs:
+        if is_protein(seq):
+            lens.append(len(seq))
+        else:
+            raise ValueError('Not a protein')
+    return lens if len(lens) > 1 else lens[0]    
+
 
 def level_of_hydrophobic(protein):
     gydrophobic_aminoacids = {"A", "V", "L", "I", "P", "F", "W", "M"}
@@ -113,4 +150,4 @@ def run_protein_tools(*seqs_and_procedure):
         return results[0]
     else:
         return results
-
+      
