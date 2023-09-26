@@ -27,6 +27,19 @@ def is_protein(seq):
     unique_chars = set(seq)
     return unique_chars <= alphabet_protein
 
+def compute_length(*seqs: str):
+    """
+    Compute the length of the input amino acid sequence
+    
+    """
+    lens = []
+    for seq in seqs:
+        if is_protein(seq):
+            lens.append(len(seq))
+        else:
+            raise ValueError('Not a protein')
+    return lens if len(lens) > 1 else lens[0]    
+
 
 def molecular_weight(seq):
     molecular_weight = 0
