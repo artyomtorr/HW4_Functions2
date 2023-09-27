@@ -1,5 +1,4 @@
 alphabet_protein = {'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y'}
-
 amino_acid_masses = {
     'A': 71.03711,
     'R': 156.10111,
@@ -22,9 +21,6 @@ amino_acid_masses = {
     'Y': 163.06333,
     'V': 99.06841
 }
-
-gydrophobic_aminoacids = {"A", "V", "L", "I", "P", "F", "W", "M"}
-
 codon_table = {
         'A': ['GCT', 'GCC', 'GCA', 'GCG'],
         'C': ['TGT', 'TGC'],
@@ -46,18 +42,7 @@ codon_table = {
         'V': ['GTT', 'GTC', 'GTA', 'GTG'],
         'W': ['TGG'],
         'Y': ['TAT', 'TAC']}
-
-
-def is_protein(seq):
-    unique_chars = set(seq)
-    return unique_chars <= alphabet_protein
-
-
-def molecular_weight(seq):
-    molecular_weight = 0
-    for amino_acid in seq:
-        molecular_weight += amino_acid_masses[amino_acid]
-    return round(molecular_weight, 3)
+gydrophobic_aminoacids = {"A", "V", "L", "I", "P", "F", "W", "M"}
 
 
 def compute_length(*seqs: str):
@@ -67,20 +52,16 @@ def compute_length(*seqs: str):
     """
     lens = []
     for seq in seqs:
-        if is_protein(seq):
-            lens.append(len(seq))
-        else:
-            raise ValueError('Not a protein')
+        lens.append(len(seq))
     return lens if len(lens) > 1 else lens[0]    
 
 
 def level_of_hydrophobic(protein):
 
     count_of_gydrophobic = 0
-    if is_protein(protein):
-        for i in range(len(protein)):
-            if protein[i] in gydrophobic_aminoacids:
-                count_of_gydrophobic += 1
+    for i in range(len(protein)):
+        if protein[i] in gydrophobic_aminoacids:
+            count_of_gydrophobic += 1
 
     percentage = count_of_gydrophobic / len(protein) * 100
 
@@ -90,7 +71,7 @@ def level_of_hydrophobic(protein):
 def translation(seq):
     """
     """
-      triplets = [seq[i:i + 3].upper() for i in range(0, len(seq), 3)]
+    triplets = [seq[i:i + 3].upper() for i in range(0, len(seq), 3)]
     protein = []
     for triplet in triplets:
         for aminoacid in codon_table.keys():
@@ -108,18 +89,28 @@ def translation(seq):
 def mutations(seq, protein):
     correct_protein = translation(seq)
 
-    if is_protein(protein):
-        bank_of_mutations = []
-        for i in range(len(correct_protein)):
-            if correct_protein[i] != protein[i]:
-                bank_of_mutations.append(f'{protein[i]}{i + 1}')
+    
+    bank_of_mutations = []
+    for i in range(len(correct_protein)):
+        if correct_protein[i] != protein[i]:
+            bank_of_mutations.append(f'{protein[i]}{i + 1}')
 
-        if len(bank_of_mutations) == 0:
-            return "Protein without mutations."
-        else:
-            return "Mutations:" + ", ".join(bank_of_mutations) + "."
+    if len(bank_of_mutations) == 0:
+        return "Protein without mutations."
     else:
-        return "It isn't a protein."
+        return "Mutations:" + ", ".join(bank_of_mutations) + "."
+
+
+def is_protein(seq):
+    unique_chars = set(seq)
+    return unique_chars <= alphabet_protein
+
+
+def molecular_weight(seq):
+    molecular_weight = 0
+    for amino_acid in seq:
+        molecular_weight += amino_acid_masses[amino_acid]
+    return round(molecular_weight, 3)
 
 
 def run_protein_tools(*seqs_and_procedure):
