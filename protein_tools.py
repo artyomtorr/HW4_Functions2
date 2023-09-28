@@ -63,45 +63,54 @@ rna_codons = {
     }
 
 
-def is_protein(seq):
+def is_protein(seq:str):
+    """
+    Check the existence of a protein sequence, return boolean.
+    """
     unique_chars = set(seq.upper())
     return unique_chars <= alphabet_protein
 
 
-def is_rna(seq):
+def is_rna(seq:str):
+    """
+    Check the existence of a RNA sequence, return boolean.
+    """
     unique_chars = set(seq.upper())
     return unique_chars <= alphabet_rna
 
 
-def compute_molecular_weight(seq):
+def compute_molecular_weight(seq:str):
+    """
+    Compute molecular weight (g/mol) of protein sequence.
+    """
     molecular_weight = 0
-    for amino_acid in seq:
+    for amino_acid in seq.upper():
         molecular_weight += amino_acid_masses[amino_acid]
     return round(molecular_weight, 3)
 
 
-def compute_length(seq: str):
+def compute_length(seq:str):
     """
-    Compute the length of the input amino acid sequence
-    
+    Compute the length of protein sequence.
     """
     return len(seq)    
 
 
-def compute_hydrophobicity(protein):
-
+def compute_hydrophobicity(protein:str):
+    """
+    Compute the percentage of gydrophobic aminoacids in protein sequence.
+    """
     count_of_gydrophobic = 0
-    if is_protein(protein):
-        for i in range(len(protein)):
-            if protein[i] in gydrophobic_aminoacids:
-                count_of_gydrophobic += 1
+    for i in range(len(protein)):
+        if protein[i] in gydrophobic_aminoacids:
+            count_of_gydrophobic += 1
 
     percentage = round(count_of_gydrophobic / len(protein) * 100, 3)
 
     return f"Percentage of gydrophobic aminoacids in {protein} = {percentage}%."
 
 
-def translation(seq):
+def translation(seq:str):
     """
     """
     triplets = [seq[i:i + 3].upper() for i in range(0, len(seq), 3)]
@@ -116,8 +125,9 @@ def translation(seq):
     return "".join(protein[start:stop + 1])
 
 
-def check_mutations(seq, protein):
-
+def check_mutations(seq:str, protein:str):
+    """
+    """
     if is_protein(protein[:-1]) is not True:
         raise ValueError("Invalid protein sequence")
     if is_rna(seq) is not True:
@@ -136,27 +146,37 @@ def check_mutations(seq, protein):
         return "Mutations:" + ", ".join(bank_of_mutations) + "."
 
 
-def run_protein_tools(*seqs_and_procedure):
-    procedure = seqs_and_procedure[-1]
-    seqs = seqs_and_procedure[:-1]
+def run_protein_tools(*args:str):
+    """
+    Function containing methods for protein analysis.
+    
+    Takes arbitrary number of arguments with protein sequencies
+    and the name of the procedure to be performed (always the 
+    last argument). Returns the result of the procedure as string 
+    if one sequnce is submitted or list if several.
 
+    If procedure 'check_mutations' is used then input must be only three
+    arguments: RNA sequence, protein sequence and the name of procedure 
+    itself.
+    """
+    *seqs, procedure = args
     results = []
+    d_of_functions = {'compute_molecular_weight': compute_molecular_weight, 
+                  'compute_length': compute_length,
+                  'compute_hydrophobicity': compute_hydrophobicity,
+                 }
     if procedure == 'check_mutations':
         results.append(check_mutations(seqs[0], seqs[1]))
-        
     else:
         for seq in seqs:
-            seq = seq.upper()
             if is_protein(seq) is not True:
                 raise ValueError("Invalid protein sequence")
-            if procedure == 'compute_molecular_weight':
-                results.append(molecular_weight(seq))
-            elif procedure == 'compute_length':
-                results.append(compute_length(seq))
-            elif procedure == 'compute_hydrophobicity':
-                results.append(compute_hydrophobicity(seq))
+            if procedure not in d_of_functions:
+                raise ValueError("Wrong procedure name")
+            else:
+                results.append(d_of_functions[procedure](seq))
     if len(results) == 1:
         return results[0]
     else:
         return results
-      
+        
