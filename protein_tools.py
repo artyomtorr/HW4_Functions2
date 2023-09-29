@@ -96,7 +96,7 @@ def compute_length(seq:str):
     return len(seq)    
 
 
-def compute_hydrophobicity(protein:str):
+def compute_hydrophobicity(protein:str) -> str:
     """
     Compute the percentage of gydrophobic aminoacids in protein sequence.
     """
@@ -110,8 +110,17 @@ def compute_hydrophobicity(protein:str):
     return f"Percentage of gydrophobic aminoacids in {protein} = {percentage}%."
 
 
-def translation(seq:str):
+def translate_rna(seq:str) -> str:
     """
+    Perform the translation of mRNA seguence into protein sequence.
+
+    Argument:
+    - seq (str): mRNA sequence. Must contain start-codon and one of 
+    the stop-codons.
+
+    Return:
+    - str, protein sequence after translation. 
+    Always starts with "M" and ends with "*".
     """
     triplets = [seq[i:i + 3].upper() for i in range(0, len(seq), 3)]
     protein = []
@@ -120,21 +129,53 @@ def translation(seq:str):
             if triplet in rna_codons[aminoacid]:
                 protein.append(aminoacid)
 
+    if protein[-1] != "*":
+        raise ValueError("Stop-codon (*) is absent in mRNA")
+    if protein[0] != "M":
+        raise ValueError("Start-codon (M) is absent in mRNA")
+
     start = protein.index("M")
     stop = protein.index("*")
     return "".join(protein[start:stop + 1])
 
 
-def check_mutations(seq:str, protein:str):
+def check_mutations(seq:str, protein:str) -> str:
     """
+    Check mutations in the protein sequence after translation.
+
+    Use additional function "translation(seq)".
+    This function doesn't show mutations, which don't lead to 
+    change aminoacids in protein sequence. 
+
+    Arguments:
+    - seq (str): translation sequence of mRNA with/without mutations
+    - protein (str): protein for comparison with protein after translation.
+    Every protein starts with "M" and ends with "*" (stop-codon). 
+    Remark: is_protein(seq) doesn't see "*", but it's used in the other part of function.
+
+    Return:
+    - str, if mRNA without mutations return "Protein without mutations." 
+    If some mutations in protein, return aminoacid(s) and their position(s)
+
+    Examples:
+    - "AUGGUAGGGAAAUUUUGA", "MVGKF*" ->  "Protein without mutations."
+    - "AUGGUAGGGAAAUUUUGA", "MGGVF*" -> "Mutations:G2, V4."
+    - "AUGGUAGGGAAAUUUUGA", "MGGKF" –> ValueError: Stop (*) is absent"
+    - "AUGGUAGGGAAAUUUUGA", "GGKF*" –> ValueError: Start (M) is absent"
+    
     """
+
+    correct_protein = translation(seq)
+    bank_of_mutations = []
+    
     if is_protein(protein[:-1]) is not True:
         raise ValueError("Invalid protein sequence")
     if is_rna(seq) is not True:
         raise ValueError("Invalid RNA sequence")
-
-    correct_protein = translation(seq)
-    bank_of_mutations = []
+    if protein[-1] != "*":
+        raise ValueError("Stop (*) is absent")
+    if protein[0] != "M":
+        raise ValueError("Start (M) is absent")
     
     for i in range(len(correct_protein)):
         if correct_protein[i] != protein[i]:
