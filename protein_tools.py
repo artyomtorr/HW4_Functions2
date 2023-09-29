@@ -96,9 +96,16 @@ def compute_length(seq:str):
     return len(seq)    
 
 
-def compute_hydrophobicity(protein:str) -> str:
+def compute_hydrophobicity(protein:str) -> tuple:
     """
     Compute the percentage of gydrophobic aminoacids in protein sequence.
+
+    Argument:
+    - protein (str): protein sequence. Include hydrophobic 
+    and hydrophilic aminoacids.
+
+    Return:
+    - tuple, result of computation percentage of gydrophobic aminoacids.
     """
     count_of_gydrophobic = 0
     for i in range(len(protein)):
@@ -107,7 +114,7 @@ def compute_hydrophobicity(protein:str) -> str:
 
     percentage = round(count_of_gydrophobic / len(protein) * 100, 3)
 
-    return f"Percentage of gydrophobic aminoacids in {protein} = {percentage}%."
+    return protein, percentage
 
 
 def translate_rna(seq:str) -> str:
@@ -160,9 +167,9 @@ def check_mutations(seq:str, protein:str) -> str:
     Examples:
     - "AUGGUAGGGAAAUUUUGA", "MVGKF*" ->  "Protein without mutations."
     - "AUGGUAGGGAAAUUUUGA", "MGGVF*" -> "Mutations:G2, V4."
-    - "AUGGUAGGGAAAUUUUGA", "MGGKF" –> ValueError: Stop (*) is absent"
-    - "AUGGUAGGGAAAUUUUGA", "GGKF*" –> ValueError: Start (M) is absent"
-    
+    - "AUGGUAGGGAAAUUUUGA", "MGGKF" –> "ValueError: Stop (*) is absent"
+    - "AUGGUAGGGAAAUUUUGA", "GGKF*" –> "ValueError: Start (M) is absent"
+    - "AUGAAAAAAUGA", "MK*" -> "ValueError: Different length of translated protein and protein"
     """
 
     correct_protein = translation(seq)
@@ -176,6 +183,8 @@ def check_mutations(seq:str, protein:str) -> str:
         raise ValueError("Stop (*) is absent")
     if protein[0] != "M":
         raise ValueError("Start (M) is absent")
+    if len(protein) != len(seq)/3:
+        raise ValueError("Different length of translated protein and protein")
     
     for i in range(len(correct_protein)):
         if correct_protein[i] != protein[i]:
