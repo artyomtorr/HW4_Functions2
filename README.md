@@ -34,13 +34,13 @@ run_protein_tools('AUGGAU_AUcAAUAA', 'MDKL*', 'check_mutations')# ValueError: In
 
 ### Contacts
 Please use contacts below to reach out with any comments, concerns, or discussions regarding **protein_tools.py.** <br>
-- Artyom Toropov ([@artyomtorr](github.com/artyomtorr)) <br>
-- Sofiya Vinogradova ([@sofiyaga57](github.com/sofiyaga57)) <br>
-- Nikita Zherko ([@rereremin](github.com/rereremin)) <br>
+- Artyom Toropov ([@artyomtorr](https://github.com/artyomtorr/)) <br>
+- Sofiya Vinogradova ([@sofiyaga57](https://github.com/sofiyaga57/)) <br>
+- Nikita Zherko ([@rereremin](https://github.com/rereremin/)) <br>
 ![изображение](https://github.com/artyomtorr/HW4_Functions2/assets/144557024/88f1c523-711a-40d7-9134-30c6b6639037)
 
 
 *Author contributions:* <br> 
-Artyom Toropov (teamlead): functions *is_protein*, *molecular_weight*, *run_protein_tools* <br> 
+Artyom Toropov (teamlead): functions `is_protein`, `compute_molecular_weight`, `run_protein_tools` <br> 
 Sofiya Vinogradova: functions ..., <br> 
-Nikita Zherko: functions *compute_hydrophobicity*, *check_mutations*.
+Nikita Zherko: functions `compute_hydrophobicity`, `check_mutations`
