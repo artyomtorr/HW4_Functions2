@@ -1,65 +1,46 @@
-# HW 4. Functions 2
-> *This is the repo for the fourth homework of the BI Python 2023 course*
+# protein_tools.py
 
-### Homework description
+**protein_tools.py** - is a tool which allows the performing of various procedures for a user entered protein sequences. 
 
-На прошлой неделе вы делали утилиту для работы с последовательностями нуклеиновых кислот (с весьма строгим ТЗ). Пришло время для чего-то более самостоятельного. 
+### Usage
 
-#### Основное задание
+The tool works by calling the function `run_protein_tools`, which takes arbitrary number of arguments with protein sequencies (*str*) and the name of the procedure to be performed (always the last argument, *str*, see the usage examples below). The output is the result of the procedure as *string* if one sequence is submitted or *list* if several.
 
+**NOTE:**  For the procedure `check_mutations` a fixed number of string arguments are used: one RNA sequence, one protein sequence and the name of procedure itself.
 
-Напишите утилиту для работы с последовательностями белков. Там должно быть минимум 5 различных операций, должна быть какая-то точка входа через которую пользователь будет всё это дело использовать. На этом, по сути, всё. Всё целиком зависит от вашей фантазии и креативности. Можете опираться на ДЗ №2 и №3. 
+### Procedures
 
-Самая главная часть задания - это файл `README.md`. Сделайте краткое введение, напишите описание тула, приведите документацию по использованию со списком аргументов. Добавьте примеры использования. Возможно, вы захотите сделать секцию Troubleshooting. ***Почему это нужно?*** В этот раз проверяющий не будет знать того, как должен работать ваш тул. Это ваш авторский код. Даже самая прекрасная функциональность, не будучи отраженной в README, скорее всего останется незамеченной. README - это ваш способ познакомить пользователя с тулом, показать всё лучше и обосновать, почему именно ваша команда должна получить наивысший балл. 
+- `compute_molecular_weight` — computes molecular weight of protein sequence in g/mol
+- `compute_length` — computes the number of amino acids in protein sequence
+- `compute_hydrophobicity` — computes the percentage of gydrophobic aminoacids in protein sequence
+- `check_mutations` —
+- 
 
-Есть люди которые, любят писать документации, а есть те - кто не любит. Найдите в вашей команде того, кто любит. И в будущем в своих рабочих проектах всегда держите рядом такого человек (или будьте им). 
+### Examples
+```python
+run_protein_tools('MAEGEITNLP', 'tGQYLAMDTSgLLYGSQT', 'GSCKRGPRT', 'compute_length') # [10, 18, 9]
+run_protein_tools('MAEGEITNLP', 'tGQYLAMDTSgLLYGSQT', 'GSCKRGPRT', 'compute_molecular_weight') # [1055.496, 1886.872, 942.482]
+run_protein_tools('MAEGEITNLP', 'tGQYLAMDTSgLLYGSQT', 'GSCKRGPRT', 'compute_hydrophobicity') # [50.0, 27.778, 11.111]
+run_protein_tools('AUGGAUCAUcAAUAA', 'MDKL*', 'check_mutations') #'Mutations:K3, L4.'
+```
+   
+### Additional information
+- The program works **only** with protein and RNA sequences. If any of the entered sequences contain inappropriate characters or cannot exist, the program will display an error. Sequences can contain characters of any case.
 
-Примеры некоторых README, которыми можно вдохновляться:
+```python
+run_protein_tools('PROTEIN', 'compute_molecular_weight') # ValueError: Invalid protein sequence
+run_protein_tools('AUGGAU_AUcAAUAA', 'MDKL*', 'check_mutations')# ValueError: Invalid RNA sequence
+```
 
-- [MetaFX](https://github.com/ctlab/metafx), тул Артёма Иванова. Там еще и [wiki](https://github.com/ctlab/metafx/wiki) крутое.
-- [samovar](https://github.com/nvaulin/samovar)
-- [MetaGEM](https://github.com/franciscozorrilla/metaGEM)
-- [Pharokka](https://github.com/gbouras13/pharokka)
-
-Типовые секции, на которые стоит обратить внимание: Title, Overview, Usage, Options, Examples, Troubleshooting, Contacts.
-
-**Tехническое требование к заданию.**
-
-Это задание будет выполняться в командах по 3 человека. Каждый из членов команды должен внести <ins>***как минимум***</ins> 2 функции. Каждое внесение функции должно сопровождаться коммитом с осмысленным описанием коммита. Ниже приведена последовательность действий для успешного выполнения задания (аналогично ДЗ №2):
-
-1. Посмотрите состав своей команды здесь ([**ССЫЛКА**](https://docs.google.com/spreadsheets/d/1KMBBBu8LqauRpDJb0v1ldPwpvzNn8-KakcHexAcqLsE/edit?usp=sharing)). 
-2. Тимлид делает форк данного репозитория. **В форке создает ветку `HW4_<surname>`, в ветке создает папку `HW4_<surname>`, в этой папке вы всё делаете.**
-3. Члены команды могут либо делать свои форки, либо работать в репозитории тимлида в качестве колабораторов ("contributors"). В любом случае делаете клоны => пишите код локально => пушите.
-4. В конце тимлид делайет pull-request из `HW4_<surname>` своего репозитория в `main` этого.
-
-
-А также:
-- Сопроводите программу лучшим `README.md` файлом в вашей жизни (на английском языке).
-- В этом ДЗ проблемы с качеством кода (нейминги, пустые строки, анноатции типов, док.стринги, пробелы) могут привести к снижению балла. Воспользуйтесь линтерами чтобы себя обезопасить. IDE по типу PyCharm или VSCode имеют фунцонал по авто-исправлению многих проблем такого рода. 
-
-Автотестов на GitHub в этом ДЗ нет, но вы можете прогнать линтеры на качество кода локально (как в ДЗ №3, подробнее читайте [тут](https://plausible-cannon-091.notion.site/Code-auto-checks-02b2ea69c1d545fca07b50ce5933ed5f?pvs=4)). 
-
-- Программа должна сохранять регистр символов.
-- Программа должна работать только с последовательностями белков.
-- Запрещается использование сторонних модулей.
+### Contacts
+Please use contacts below to reach out with any comments, concerns, or discussions regarding **protein_tools.py.** <br>
+- Artyom Toropov ([@artyomtorr](https://github.com/artyomtorr/)) <br>
+- Sofiya Vinogradova ([@sofiyaga57](https://github.com/sofiyaga57/)) <br>
+- Nikita Zherko ([@rereremin](https://github.com/rereremin/)) <br>
+![изображение](https://github.com/artyomtorr/HW4_Functions2/assets/144557024/88f1c523-711a-40d7-9134-30c6b6639037)
 
 
-### Форма сдачи
-
-Прикрепите ссылку на pull-request тимлида в Google Class (можете сделать от лица каждого члена команды, но это не обязательно).
-
-
-### Pазбалловка
-
-- За каждую из 5 операций - максимум **1.5 балла**
-- За README - максимум **2.5 балла**
-- Если вы не внесли как минимум 2 функции от себя, вы получаете 0 баллов (на баллы остальных членов команды это не влияет).
-- За фото созвона в README можно получить 0.2 доп. балла (но не более 10 баллов суммарно)
-
-
-
-### **Предполагаемый учебный результат**
-
-Это задание позволит вам проявить креативность и учиться быть не только кодером, но и автором. Также это задание поможет окончательно закрепить материал по функциям который мы прошли.
-
-Удачи! ✨✨
+*Author contributions:* <br> 
+Artyom Toropov (teamlead): functions `is_protein`, `compute_molecular_weight`, `run_protein_tools` <br> 
+Sofiya Vinogradova: functions ..., <br> 
+Nikita Zherko: functions `compute_hydrophobicity`, `check_mutations`

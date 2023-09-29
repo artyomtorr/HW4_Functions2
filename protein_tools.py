@@ -99,13 +99,6 @@ def compute_length(seq:str):
 def compute_hydrophobicity(protein:str) -> str:
     """
     Compute the percentage of gydrophobic aminoacids in protein sequence.
-
-    Argument:
-    - protein (str): protein sequence. Include hydrophobic 
-    and hydrophilic aminoacids.
-
-    Return:
-    - str, result of computation percentage of gydrophobic aminoacids.
     """
     count_of_gydrophobic = 0
     for i in range(len(protein)):
@@ -117,16 +110,17 @@ def compute_hydrophobicity(protein:str) -> str:
     return f"Percentage of gydrophobic aminoacids in {protein} = {percentage}%."
 
 
-def translation(seq:str) -> str:
+def translate_rna(seq:str) -> str:
     """
-    Realize the translation mRNA into protein sequence.
+    Perform the translation of mRNA seguence into protein sequence.
 
     Argument:
-    - seq (str): mRNA sequence
+    - seq (str): mRNA sequence. Must contain start-codon and one of 
+    the stop-codons.
 
     Return:
-    - str, protein after translation 
-    Remark: Correct protein sequence starts with "M" and ends with "*".
+    - str, protein sequence after translation. 
+    Always starts with "M" and ends with "*".
     """
     triplets = [seq[i:i + 3].upper() for i in range(0, len(seq), 3)]
     protein = []
@@ -165,12 +159,15 @@ def check_mutations(seq:str, protein:str) -> str:
 
     Examples:
     - "AUGGUAGGGAAAUUUUGA", "MVGKF*" ->  "Protein without mutations."
-    - "AUGGUAGGGAAAUUUUGA", "MGGKF*" ->  "Mutations:G2."
     - "AUGGUAGGGAAAUUUUGA", "MGGVF*" -> "Mutations:G2, V4."
     - "AUGGUAGGGAAAUUUUGA", "MGGKF" –> ValueError: Stop (*) is absent"
     - "AUGGUAGGGAAAUUUUGA", "GGKF*" –> ValueError: Start (M) is absent"
     
     """
+
+    correct_protein = translation(seq)
+    bank_of_mutations = []
+    
     if is_protein(protein[:-1]) is not True:
         raise ValueError("Invalid protein sequence")
     if is_rna(seq) is not True:
@@ -179,9 +176,6 @@ def check_mutations(seq:str, protein:str) -> str:
         raise ValueError("Stop (*) is absent")
     if protein[0] != "M":
         raise ValueError("Start (M) is absent")
-
-    correct_protein = translation(seq)
-    bank_of_mutations = []
     
     for i in range(len(correct_protein)):
         if correct_protein[i] != protein[i]:
@@ -227,7 +221,3 @@ def run_protein_tools(*args:str):
     else:
         return results
         
-print(run_protein_tools("AUGGUAGGGAAAUUUUGA", "MGGKF*", "check_mutations"))
-print(run_protein_tools("GUAGGGAAAUUUUgA", "MGVKF*", "check_mutations"))
-#print(translation("AUGGUAGGGAAAUUUUGA"))
-
