@@ -79,21 +79,34 @@ def is_rna(seq:str):
     return unique_chars <= alphabet_rna
 
 
-def compute_molecular_weight(seq:str):
+def compute_molecular_weight(seq:str) -> tuple:
     """
     Compute molecular weight (g/mol) of protein sequence.
+    
+    Argument:
+    - protein (str): protein sequence.
+    
+    Return: 
+    - tuple with protein sequence and computed molecular 
+    weight (float rounded to 3 decimal places).
     """
     molecular_weight = 0
     for amino_acid in seq.upper():
         molecular_weight += amino_acid_masses[amino_acid]
-    return round(molecular_weight, 3)
+    return seq, round(molecular_weight, 3)
 
 
-def compute_length(seq:str):
+def compute_length(seq:str) -> tuple:
     """
     Compute the length of protein sequence.
+    
+    Argument:
+    - protein (str): protein sequence.
+    
+    Return: 
+    - tuple with protein sequence and computed length.
     """
-    return len(seq)    
+    return seq, len(seq)    
 
 
 def compute_hydrophobicity(protein:str) -> tuple:
@@ -101,11 +114,11 @@ def compute_hydrophobicity(protein:str) -> tuple:
     Compute the percentage of gydrophobic aminoacids in protein sequence.
 
     Argument:
-    - protein (str): protein sequence. Include hydrophobic 
-    and hydrophilic aminoacids.
+    - protein (str): protein sequence. 
 
     Return:
-    - tuple, result of computation percentage of gydrophobic aminoacids.
+    - tuple with protein sequence and computed percentage 
+    of gydrophobic aminoacids.
     """
     count_of_gydrophobic = 0
     for i in range(len(protein)):
@@ -148,21 +161,21 @@ def translate_rna(seq:str) -> str:
 
 def check_mutations(seq:str, protein:str) -> str:
     """
-    Check mutations in the protein sequence after translation.
+    Check missense mutations in the protein sequence after translation.
 
-    Use additional function "translation(seq)".
-    This function doesn't show mutations, which don't lead to 
-    change aminoacids in protein sequence. 
+    Uses additional function "translate_rna(seq)".
 
     Arguments:
-    - seq (str): translation sequence of mRNA with/without mutations
-    - protein (str): protein for comparison with protein after translation.
-    Every protein starts with "M" and ends with "*" (stop-codon). 
-    Remark: is_protein(seq) doesn't see "*", but it's used in the other part of function.
+    - seq (str): sequence of mRNA with/without mutations.
+    Must contain start-codon and one of the stop-codons.
+    - protein (str): protein sequence translated from mRNA.
+    Must start with "M" and ends with "*" (stop-codon). 
+    
+    Note: is_protein(seq) doesn't see "*", but it's used in the other part of function.
 
     Return:
     - str, if mRNA without mutations return "Protein without mutations." 
-    If some mutations in protein, return aminoacid(s) and their position(s)
+    If there are mutations in protein, returns aminoacid(s) and their position(s)
 
     Examples:
     - "AUGGUAGGGAAAUUUUGA", "MVGKF*" ->  "Protein without mutations."
@@ -172,7 +185,7 @@ def check_mutations(seq:str, protein:str) -> str:
     - "AUGAAAAAAUGA", "MK*" -> "ValueError: Different length of translated protein and protein"
     """
 
-    correct_protein = translation(seq)
+    correct_protein = translate_rna(seq)
     bank_of_mutations = []
     
     if is_protein(protein[:-1]) is not True:
@@ -193,7 +206,7 @@ def check_mutations(seq:str, protein:str) -> str:
     if len(bank_of_mutations) == 0:
         return "Protein without mutations."
     else:
-        return "Mutations:" + ", ".join(bank_of_mutations) + "."
+        return "Mutations: " + ", ".join(bank_of_mutations) + "."
 
 
 def run_protein_tools(*args:str):
@@ -202,12 +215,12 @@ def run_protein_tools(*args:str):
     
     Takes arbitrary number of arguments with protein sequencies
     and the name of the procedure to be performed (always the 
-    last argument). Returns the result of the procedure as string 
-    if one sequnce is submitted or list if several.
+    last argument). Returns the result of the procedure as tuple 
+    if one sequnce is submitted or list of tuples if several.
 
-    If procedure 'check_mutations' is used then input must be only three
-    arguments: RNA sequence, protein sequence and the name of procedure 
-    itself.
+    Note: if procedure 'check_mutations' is used then input must 
+    contain only three arguments: RNA sequence, protein sequence 
+    and the name of procedure itself.
     """
     *seqs, procedure = args
     results = []
