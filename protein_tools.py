@@ -134,6 +134,33 @@ def protein_to_dna(protein: str) -> str:
             
     return nucleic_acid_seq.replace(' ', '', -1)  
 
+def count_amino_acids(protein: str) -> dict:
+    
+    """
+    Calculates the number of each aminoacid in a given protein sequence.
+    
+    Argument:
+    - protein (str): protein sequence.
+
+    Return:
+    - dictionary, where a key is the aminoacid letter and value is number of this aminoacid. 
+    
+    Does not distinguish between lowercase and uppercase letters.
+
+    Examples:
+    
+    -'MACDRS' -> {'M': 1, 'A': 1, 'C': 1, 'D': 1, 'R': 1, 'S': 1}
+    -'MaCdrS' -> {'M': 1, 'A': 1, 'C': 1, 'D': 1, 'R': 1, 'S': 1}
+    
+    """
+    
+    amino_acids_dict = {}
+    for aa in protein.upper():
+        if aa in amino_acids_dict:
+            amino_acids_dict[aa] += 1
+        else:
+            amino_acids_dict[aa] = 1
+    return amino_acids_dict
 
 def compute_hydrophobicity(protein:str) -> tuple:
     """
