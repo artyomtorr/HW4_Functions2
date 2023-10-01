@@ -103,7 +103,36 @@ def compute_length(protein: str) -> int:
     
     'MGHIKCE' -> 7
     """
-    return len(protein)  
+    return len(protein)
+
+def protein_to_dna(protein: str) -> str:
+    
+    """
+    Returns possible variants of DNAs for a given protein sequence.
+    
+    Argument:
+    - protein (str): protein sequence.
+
+    Return:
+    - string, variants of nucleic acids. 
+    If several codons correspond to a given amino acid they are displayed with a '/'.
+    
+    Does not distinguish between lowercase and uppercase letters.
+    
+    Examples:
+    
+    -'MACDRS' -> 'ATG GCT/GCC/GCA/GCG TGT/TGC GAT/GAC CGT/CGC/CGA/CGG/AGA/AGG TCT/TCC/TCA/TCG/AGT/AGC'
+    -'MaCdrS' -> 'ATG GCT/GCC/GCA/GCG TGT/TGC GAT/GAC CGT/CGC/CGA/CGG/AGA/AGG TCT/TCC/TCA/TCG/AGT/AGC'
+    
+    """
+    nucleic_acid_seq = ''
+    
+    for aa in protein.upper():
+        codons = dna_codons.get(aa)
+        nucleic_acid_seq += '/'.join(codons) + ' '
+    
+            
+    return nucleic_acid_seq.replace(' ', '', -1)  
 
 
 def compute_hydrophobicity(protein:str) -> tuple:
