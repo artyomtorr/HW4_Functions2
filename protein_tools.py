@@ -96,17 +96,74 @@ def compute_molecular_weight(seq:str) -> tuple:
     return seq, round(molecular_weight, 3)
 
 
-def compute_length(seq:str) -> tuple:
+def compute_length(protein: str) -> tuple:
     """
-    Compute the length of protein sequence.
+    Compute the length of the input protein sequence.
     
-    Argument:
+     Argument:
     - protein (str): protein sequence.
     
     Return: 
     - tuple with protein sequence and computed length.
     """
-    return seq, len(seq)    
+    return seq, len(seq)  
+
+def protein_to_dna(protein: str) -> str:
+    
+    """
+    Returns possible variants of DNAs for a given protein sequence.
+    
+    Argument:
+    - protein (str): protein sequence.
+
+    Return:
+    - string, variants of nucleic acids. 
+    If several codons correspond to a given amino acid they are displayed with a '/'.
+    
+    Does not distinguish between lowercase and uppercase letters.
+    
+    Examples:
+    
+    -'MACDRS' -> 'ATG GCT/GCC/GCA/GCG TGT/TGC GAT/GAC CGT/CGC/CGA/CGG/AGA/AGG TCT/TCC/TCA/TCG/AGT/AGC'
+    -'MaCdrS' -> 'ATG GCT/GCC/GCA/GCG TGT/TGC GAT/GAC CGT/CGC/CGA/CGG/AGA/AGG TCT/TCC/TCA/TCG/AGT/AGC'
+    
+    """
+    nucleic_acid_seq = ''
+    
+    for aa in protein.upper():
+        codons = dna_codons.get(aa)
+        nucleic_acid_seq += '/'.join(codons) + ' '
+            
+    return nucleic_acid_seq.replace(' ', '', -1)  
+
+  
+def count_amino_acids(protein: str) -> dict:
+    
+    """
+    Calculates the number of each aminoacid in a given protein sequence.
+    
+    Argument:
+    - protein (str): protein sequence.
+
+    Return:
+    - dictionary, where a key is the aminoacid letter and value is number of this aminoacid. 
+    
+    Does not distinguish between lowercase and uppercase letters.
+
+    Examples:
+    
+    -'MACDRS' -> {'M': 1, 'A': 1, 'C': 1, 'D': 1, 'R': 1, 'S': 1}
+    -'MaCdrS' -> {'M': 1, 'A': 1, 'C': 1, 'D': 1, 'R': 1, 'S': 1}
+    
+    """
+    
+    amino_acids_dict = {}
+    for aa in protein.upper():
+        if aa in amino_acids_dict:
+            amino_acids_dict[aa] += 1
+        else:
+            amino_acids_dict[aa] = 1
+    return amino_acids_dict
 
 
 def compute_hydrophobicity(protein:str) -> tuple:
@@ -114,7 +171,8 @@ def compute_hydrophobicity(protein:str) -> tuple:
     Compute the percentage of gydrophobic aminoacids in protein sequence.
 
     Argument:
-    - protein (str): protein sequence. 
+    - protein (str): protein sequence. Includes hydrophobic 
+    and hydrophilic aminoacids.
 
     Return:
     - tuple with protein sequence and computed percentage 
@@ -184,7 +242,6 @@ def check_mutations(seq:str, protein:str) -> str:
     - "AUGGUAGGGAAAUUUUGA", "GGKF*" –> "ValueError: Start (M) is absent"
     - "AUGAAAAAAUGA", "MK*" -> "ValueError: Different length of translated protein and protein"
     """
-
     correct_protein = translate_rna(seq)
     bank_of_mutations = []
     
@@ -214,9 +271,9 @@ def run_protein_tools(*args:str):
     Function containing methods for protein analysis.
     
     Takes arbitrary number of arguments with protein sequencies
-    and the name of the procedure to be performed (always the 
-    last argument). Returns the result of the procedure as tuple 
-    if one sequnce is submitted or list of tuples if several.
+    and the name of the procedure to be performed (always the last 
+    argument). Returns the result of the procedure as string, tuple 
+    or dictionary if one sequnce is submitted or list if several.
 
     Note: if procedure 'check_mutations' is used then input must 
     contain only three arguments: RNA sequence, protein sequence 
@@ -242,4 +299,3 @@ def run_protein_tools(*args:str):
         return results[0]
     else:
         return results
-        
