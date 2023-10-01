@@ -79,31 +79,34 @@ def is_rna(seq:str):
     return unique_chars <= alphabet_rna
 
 
-def compute_molecular_weight(seq:str):
+def compute_molecular_weight(seq:str) -> tuple:
     """
     Compute molecular weight (g/mol) of protein sequence.
+    
+    Argument:
+    - protein (str): protein sequence.
+    
+    Return: 
+    - tuple with protein sequence and computed molecular 
+    weight (float rounded to 3 decimal places).
     """
     molecular_weight = 0
     for amino_acid in seq.upper():
         molecular_weight += amino_acid_masses[amino_acid]
-    return round(molecular_weight, 3)
+    return seq, round(molecular_weight, 3)
 
 
-def compute_length(protein: str) -> int:
+def compute_length(protein: str) -> tuple:
     """
     Compute the length of the input protein sequence.
     
      Argument:
     - protein (str): protein sequence.
-
-    Return:
-    - string, length of the input protein sequence.
     
-    Example:
-    
-    'MGHIKCE' -> 7
+    Return: 
+    - tuple with protein sequence and computed length.
     """
-    return len(protein)
+    return seq, len(seq)  
 
 def protein_to_dna(protein: str) -> str:
     
@@ -130,10 +133,10 @@ def protein_to_dna(protein: str) -> str:
     for aa in protein.upper():
         codons = dna_codons.get(aa)
         nucleic_acid_seq += '/'.join(codons) + ' '
-    
             
     return nucleic_acid_seq.replace(' ', '', -1)  
 
+  
 def count_amino_acids(protein: str) -> dict:
     
     """
@@ -162,16 +165,18 @@ def count_amino_acids(protein: str) -> dict:
             amino_acids_dict[aa] = 1
     return amino_acids_dict
 
+
 def compute_hydrophobicity(protein:str) -> tuple:
     """
     Compute the percentage of gydrophobic aminoacids in protein sequence.
 
     Argument:
-    - protein (str): protein sequence. Include hydrophobic 
+    - protein (str): protein sequence. Includes hydrophobic 
     and hydrophilic aminoacids.
 
     Return:
-    - tuple, result of computation percentage of gydrophobic aminoacids.
+    - tuple with protein sequence and computed percentage 
+    of gydrophobic aminoacids.
     """
     count_of_gydrophobic = 0
     for i in range(len(protein)):
@@ -214,21 +219,21 @@ def translate_rna(seq:str) -> str:
 
 def check_mutations(seq:str, protein:str) -> str:
     """
-    Check mutations in the protein sequence after translation.
+    Check missense mutations in the protein sequence after translation.
 
-    Use additional function "translation(seq)".
-    This function doesn't show mutations, which don't lead to 
-    change aminoacids in protein sequence. 
+    Uses additional function "translate_rna(seq)".
 
     Arguments:
-    - seq (str): translation sequence of mRNA with/without mutations
-    - protein (str): protein for comparison with protein after translation.
-    Every protein starts with "M" and ends with "*" (stop-codon). 
-    Remark: is_protein(seq) doesn't see "*", but it's used in the other part of function.
+    - seq (str): sequence of mRNA with/without mutations.
+    Must contain start-codon and one of the stop-codons.
+    - protein (str): protein sequence translated from mRNA.
+    Must start with "M" and ends with "*" (stop-codon). 
+    
+    Note: is_protein(seq) doesn't see "*", but it's used in the other part of function.
 
     Return:
     - str, if mRNA without mutations return "Protein without mutations." 
-    If some mutations in protein, return aminoacid(s) and their position(s)
+    If there are mutations in protein, returns aminoacid(s) and their position(s)
 
     Examples:
     - "AUGGUAGGGAAAUUUUGA", "MVGKF*" ->  "Protein without mutations."
@@ -237,8 +242,7 @@ def check_mutations(seq:str, protein:str) -> str:
     - "AUGGUAGGGAAAUUUUGA", "GGKF*" –> "ValueError: Start (M) is absent"
     - "AUGAAAAAAUGA", "MK*" -> "ValueError: Different length of translated protein and protein"
     """
-
-    correct_protein = translation(seq)
+    correct_protein = translate_rna(seq)
     bank_of_mutations = []
     
     if is_protein(protein[:-1]) is not True:
@@ -259,7 +263,7 @@ def check_mutations(seq:str, protein:str) -> str:
     if len(bank_of_mutations) == 0:
         return "Protein without mutations."
     else:
-        return "Mutations:" + ", ".join(bank_of_mutations) + "."
+        return "Mutations: " + ", ".join(bank_of_mutations) + "."
 
 
 def run_protein_tools(*args:str):
@@ -267,13 +271,13 @@ def run_protein_tools(*args:str):
     Function containing methods for protein analysis.
     
     Takes arbitrary number of arguments with protein sequencies
-    and the name of the procedure to be performed (always the 
-    last argument). Returns the result of the procedure as string 
-    if one sequnce is submitted or list if several.
+    and the name of the procedure to be performed (always the last 
+    argument). Returns the result of the procedure as string, tuple 
+    or dictionary if one sequnce is submitted or list if several.
 
-    If procedure 'check_mutations' is used then input must be only three
-    arguments: RNA sequence, protein sequence and the name of procedure 
-    itself.
+    Note: if procedure 'check_mutations' is used then input must 
+    contain only three arguments: RNA sequence, protein sequence 
+    and the name of procedure itself.
     """
     *seqs, procedure = args
     results = []
@@ -295,4 +299,3 @@ def run_protein_tools(*args:str):
         return results[0]
     else:
         return results
-        
