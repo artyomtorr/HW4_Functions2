@@ -14,7 +14,7 @@ The tool works by calling the function `run_protein_tools`, which takes arbitrar
 - `compute_length` — computes the number of amino acids in protein sequence
 - `compute_hydrophobicity` — computes the percentage of gydrophobic aminoacids in protein sequence
 - `check_mutations` — checks missense mutations in the protein sequence after translation
-- `protein_to_nucleic_acid`- returns possible variants of DNAs for a given protein sequence
+- `protein_to_dna`- returns possible variants of DNAs for a given protein sequence
 - `count_amino_acids` - calculates the number of each aminoacid in protein sequence
 
 ### Examples
@@ -31,7 +31,7 @@ run_protein_tools('MAEGEITNLP', 'tGQYLAMDTSgLLYGSQT', 'compute_hydrophobicity')
 run_protein_tools('AUGGAUCAUcAAUAA', 'MDKL*', 'check_mutations')
 #'Mutations: K3, L4.'
 
-run_protein_tools('MAEGLP', 'LYGSQT','protein_to_nucleic_acid')
+run_protein_tools('MAEGLP', 'LYGSQT','protein_to_dna')
 #['ATG GCT/GCC/GCA/GCG GAA/GAG GGT/GGC/GGA/GGG TTA/TTG/CTT/CTC/CTA/CTG CCT/CCC/CCA/CCG',
 #'TTA/TTG/CTT/CTC/CTA/CTG TAT/TAC GGT/GGC/GGA/GGG TCT/TCC/TCA/TCG/AGT/AGC CAA/CAG ACT/ACC/ACA/ACG']
 
@@ -62,5 +62,5 @@ Please use contacts below to reach out with any comments, concerns, or discussio
 
 *Author contributions:* <br> 
 Artyom Toropov (teamlead): functions `is_protein`, `is_rna`, `compute_molecular_weight`, `run_protein_tools` <br> 
-Sofiya Vinogradova: functions `compute_length`, `count_amino_acids`, `protein_to_nucleic_acid` <br> 
+Sofiya Vinogradova: functions `compute_length`, `count_amino_acids`, `protein_to_dna` <br> 
 Nikita Zherko: functions `compute_hydrophobicity`, `translate_rna`, `check_mutations`
