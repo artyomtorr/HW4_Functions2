@@ -89,11 +89,21 @@ def compute_molecular_weight(seq:str):
     return round(molecular_weight, 3)
 
 
-def compute_length(seq:str):
+def compute_length(protein: str) -> int:
     """
-    Compute the length of protein sequence.
+    Compute the length of the input protein sequence.
+    
+     Argument:
+    - protein (str): protein sequence.
+
+    Return:
+    - string, length of the input protein sequence.
+    
+    Example:
+    
+    'MGHIKCE' -> 7
     """
-    return len(seq)    
+    return len(protein)  
 
 
 def compute_hydrophobicity(protein:str) -> tuple:
